@@ -19,7 +19,12 @@ client = MongoClient(uri, server_api=ServerApi('1'))
 def index():
     task={'completed':False,'title':"washing clothes",'due_date':'23-10-2003'}
     return render_template("index.html")
+@app.route('/add/',methods=["POST"])
+def add():
+    task=request.form.get('task')
+    print(task)
+    return Response(task)
 
 
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run(debug=True,port=5001)
