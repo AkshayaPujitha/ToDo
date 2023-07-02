@@ -9,20 +9,31 @@ import os
 app=Flask(__name__)
 load_dotenv('.env')
 mongo_db_password = os.environ.get('MONGO_DB_PASSWORD')
-uri = f"mongodb+srv://pujitha:{mongo_db_password}@flasktodomongo.xgwvcrn.mongodb.net/?retryWrites=true&w=majority"
-
+uri =f"mongodb+srv://pujitha:pujitha23@cluster0.xaywh5l.mongodb.net/?retryWrites=true&w=majority"
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
 
-
+#Retrieve
 @app.route('/')
 def index():
-    task={'completed':False,'title':"washing clothes",'due_date':'23-10-2003'}
-    return render_template("index.html")
+    tasks=client.todo.tasks.find({})
+    l=[]
+    for task in tasks:
+        l.append(task)
+    #print(tasks)
+    return render_template("index.html",tasks=l)
+
+#Create
 @app.route('/add/',methods=["POST"])
 def add():
     task=request.form.get('task')
-    print(task)
+    date=request.form.get('date')
+    client.todo.tasks.insert_one({
+        'task':task,
+        'date':date,
+        'is_completed':False
+    })
+    print("Sucessfully added")
     return Response(task)
 
 
