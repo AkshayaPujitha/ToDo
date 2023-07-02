@@ -11,7 +11,7 @@ import os
 app=Flask(__name__)
 load_dotenv('.env')
 mongo_db_password = os.environ.get('MONGO_DB_PASSWORD')
-uri =f"mongodb+srv://pujitha:pujitha23@cluster0.xaywh5l.mongodb.net/?retryWrites=true&w=majority"
+uri =f"mongodb+srv://pujitha:{mongo_db_password}@cluster0.xaywh5l.mongodb.net/?retryWrites=true&w=majority"
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
 
@@ -37,6 +37,13 @@ def add():
     })
     print("Sucessfully added")
     return Response(task)
+
+#Update
+@app.route('/edit/',methods=['POST'])
+def edit():
+    task_id=request.form.get('task_id')
+    print(task_id)
+
 
 #Delete
 @app.route('/delete/',methods=['POST'])
