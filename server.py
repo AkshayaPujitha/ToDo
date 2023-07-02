@@ -3,6 +3,8 @@ from flask_pymongo import PyMongo
 from dotenv import load_dotenv
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from bson import ObjectId
+
 import os
 
 #connecting with mongodb
@@ -35,6 +37,19 @@ def add():
     })
     print("Sucessfully added")
     return Response(task)
+
+#Delete
+@app.route('/delete/',methods=['POST'])
+def action():
+    task_id=request.form.get('task_id')
+    print(task_id)
+    client.todo.tasks.delete_one({'_id':ObjectId(task_id)})
+    tasks=client.todo.tasks.find({})
+    l=[]
+    for task in tasks:
+        l.append(task)
+    #print(tasks)
+    return render_template("index.html",tasks=l)
 
 
 if __name__=="__main__":
