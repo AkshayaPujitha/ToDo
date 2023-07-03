@@ -30,12 +30,13 @@ def index():
 def add():
     task=request.form.get('task')
     date=request.form.get('date')
-    client.todo.tasks.insert_one({
-        'task':task,
-        'date':date,
-        'is_completed':False
-    })
-    print("Sucessfully added")
+    if task is not None:
+        client.todo.tasks.insert_one({
+            'task':task,
+            'date':date,
+            'is_completed':False
+        })
+        print("Sucessfully added")
     return Response(task)
 
 #Update
@@ -49,7 +50,6 @@ def edit():
     if taskName and taskDate is not None:
         client.todo.tasks.update_one({'_id':ObjectId(task_id)},{"$set":{'task':taskName,'date':taskDate}})
         
-       
     elif taskName is not None:
         client.todo.tasks.update_one({'_id':ObjectId(task_id)},{"$set":{'task':taskName}})
         print("done")
