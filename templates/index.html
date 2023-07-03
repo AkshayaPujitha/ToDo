@@ -52,7 +52,7 @@
                           id="exampleFormControlInput1" placeholder="Add new...">
                         <input type="date" name="date" class="btn btn-link" data-toggle="tooltip" title="Set due date">
                         <button id="dueDateButton" type="button" class="btn btn-link" data-toggle="tooltip"
-                          title="Set due date"><i class="fas fa-calendar-alt fa-lg me-3"></i></button>
+                          title="Set due date" ></button>
                         <div id="calendar-container" class="hidden">
 
                           <!-- Calendar content goes here -->
@@ -96,9 +96,13 @@
                 </li>
                 <li class="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
                   <div class="d-flex flex-row justify-content-end mb-1">
-                    <form action="/edit" method="POST">
+                    <form action="/edit" method="POST" id="editForm">
+                      <input type="hidden" value="{{ task._id }}" name="task_id">
+                      <input type="hidden" class="existingTaskName" value="{{ task.task}}">
+                      <input type="hidden" class="existingTaskDate" value="{{ task.date }}">
                       <input type="submit" value="edit" name="submit" class="text-info" data-mdb-toggle="tooltip"
-                        title="Edit todo"></a>
+                        title="Edit todo" onclick="showEditPrompt(event)"  ></a>
+                        
                       </form>
                       <form action="/delete" method="POST">
                       <input type="hidden" value="{{ task._id }}" name="task_id">
@@ -123,6 +127,43 @@
     </div>
   </section>
 </body>
+<script>
+  function showEditPrompt(event) {
+    var existingTaskName = document.getElementsByClassName("existingTaskName").value;
+    var existingTaskDate = document.getElementsByClassName("existingTaskDate").value; // Replace with the existing task date
+
+    var newTaskName = prompt("Enter the new task name:");
+    var newTaskDate = prompt("Enter the new task date:");
+    console.log(newTaskName)
+    if (newTaskName !== null || newTaskDate !== null) {
+      // Set the input values dynamically
+      var form = document.getElementById("editForm");
+     // Create a new FormData object and append the updated values
+     var formData = new FormData(form);
+     formData.append("task_name", newTaskName);
+     formData.append("task_date", newTaskDate);
+
+     // Send the form data asynchronously using the fetch API
+     fetch(form.action, {
+       method: form.method,
+       body: formData
+     })
+     .then(response => {
+       // Handle the response as needed
+       console.log("Form submitted successfully.");
+     })
+     .catch(error => {
+       // Handle any errors
+       console.error("An error occurred during form submission:", error);
+     });
+   }
+ }
+
+      // Submit the form
+   
+</script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
