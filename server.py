@@ -37,7 +37,12 @@ def add():
             'is_completed':False
         })
         print("Sucessfully added")
-    return Response(task)
+    tasks=client.todo.tasks.find({})
+    l=[]
+    for task in tasks:
+        l.append(task)
+    #print(tasks)
+    return render_template("index.html",tasks=l)
 
 #Update
 @app.route('/edit/',methods=['POST'])
@@ -46,8 +51,9 @@ def edit():
     print(task_id)
     taskName=request.form.get('task')
     taskDate=request.form.get('date')
+    print("task date",taskDate)
     print(taskDate,taskName,task_id)
-    if taskName and taskDate is not None:
+    if taskName and taskDate is not None and len(taskDate)!=0:
         client.todo.tasks.update_one({'_id':ObjectId(task_id)},{"$set":{'task':taskName,'date':taskDate}})
         
     elif taskName is not None:
