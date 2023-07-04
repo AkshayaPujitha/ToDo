@@ -44,9 +44,9 @@ def add():
 def edit():
     task_id=request.form.get('task_id')
     print(task_id)
-    taskName=request.form.get('task_name')
-    taskDate=request.form.get('task_date')
-    print(taskDate)
+    taskName=request.form.get('task')
+    taskDate=request.form.get('date')
+    print(taskDate,taskName,task_id)
     if taskName and taskDate is not None:
         client.todo.tasks.update_one({'_id':ObjectId(task_id)},{"$set":{'task':taskName,'date':taskDate}})
         
@@ -68,7 +68,7 @@ def edit():
 
 #Delete
 @app.route('/delete/',methods=['POST'])
-def action():
+def delete():
     task_id=request.form.get('task_id')
     print(task_id)
     client.todo.tasks.delete_one({'_id':ObjectId(task_id)})
